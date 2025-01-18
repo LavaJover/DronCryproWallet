@@ -1,23 +1,30 @@
 package main
 
 import (
-	"fmt"
 	"log"
+	"net"
 
-	"github.com/LavaJover/dronwallet/wallet/internal/wallet"
-)
-
-var(
-	usdtAddress = "TXCwnDoSsAf1opVTitqdGxSKVE6uzP2DYN"
-	apiKey = "b221365a-5a86-4d75-a1a3-1456c7f1864d"
+	"github.com/LavaJover/dronwallet/wallet/internal/server"
+	"github.com/LavaJover/dronwallet/wallet/internal/service"
+	walletpb "github.com/LavaJover/dronwallet/wallet/proto/gen"
+	"google.golang.org/grpc"
 )
 
 func main(){
-	balance, err := wallet.GetUSDTBalance(usdtAddress, apiKey)
+	walletService := &service.WalletService{}
 
-	if err != nil{
-		log.Fatalf("Error getting balance: %v", err)
-	}
+	grpcServer := grpc.NewServer()
+	walletServer := &server.WalletServer{WalletService: walletService}
+	walletpb.RegisterWalletServiceServer(grpcServer, walletServer)
 
-	fmt.Println(balance)
+	listener, err := net.Listen("tcp", ":50051")
+    if err != nil {
+        log.Fatalf("Failed to listen on port 50051: %v", err)
+    }
+
+    log.Println("gRPC server is running on port 50051")
+    if err := grpcServer.Serve(listener); err != nil {
+        log.Fatalf("Failed to serve gRPC server: %v", err)
+    }
+
 }

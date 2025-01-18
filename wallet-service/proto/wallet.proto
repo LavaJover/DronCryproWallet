@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package wallet;
+
+option go_package = "github.com/LavaJover/dronwallet/wallet/proto/gen;walletpb";
+
+service WalletService{
+    rpc GetWalletBalance (GetBalanceRequest) returns (GetBalanceResponse);
+}
+
+message GetBalanceRequest{
+    string address = 1;
+}
+
+message GetBalanceResponse{
+    double balance = 1;
+}
