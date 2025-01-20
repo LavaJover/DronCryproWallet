@@ -21,12 +21,6 @@ func (repo *UserRepo) DeleteUser (id uint){
 	repo.DB.Delete(&models.User{}, id)
 }
 
-func (repo *UserRepo) FindUserByCredentials (email string, raw_password string) *models.User{
-	user := &models.User{}
-	repo.DB.Where("email = ? AND password = ?", email, password.HashPassword(raw_password)).First(&user)
-
-	return user
-}
 
 func (repo *UserRepo) FindUserByEmail (email string) *models.User{
 	user := &models.User{}
