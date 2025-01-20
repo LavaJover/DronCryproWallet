@@ -4,9 +4,9 @@ import (
 	"log"
 	"net"
 
-	"github.com/LavaJover/dronwallet/wallet/internal/server"
-	"github.com/LavaJover/dronwallet/wallet/internal/service"
-	walletpb "github.com/LavaJover/dronwallet/wallet/proto/gen"
+	"github.com/LavaJover/DronCryptoWallet/wallet/internal/server"
+	"github.com/LavaJover/DronCryptoWallet/wallet/internal/service"
+	walletpb "github.com/LavaJover/DronCryptoWallet/wallet/proto/gen"
 	"google.golang.org/grpc"
 )
 

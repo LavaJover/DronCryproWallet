@@ -1,14 +1,12 @@
 package service
 
 import (
-	// token "github.com/LavaJover/dronwallet/auth/internal/middleware/JWT"
 	"errors"
 
-	token "github.com/LavaJover/dronwallet/auth/internal/middleware/JWT"
-	"github.com/LavaJover/dronwallet/auth/internal/middleware/password"
-	// "github.com/LavaJover/dronwallet/auth/internal/middleware/password"
-	"github.com/LavaJover/dronwallet/auth/internal/models"
-	repo "github.com/LavaJover/dronwallet/auth/internal/repositories"
+	token "github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/JWT"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/password"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/models"
+	repo "github.com/LavaJover/DronCryptoWallet/auth/internal/repositories"
 )
 
 

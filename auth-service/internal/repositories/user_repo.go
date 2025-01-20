@@ -1,8 +1,8 @@
 package repo
 
 import (
-	"github.com/LavaJover/dronwallet/auth/internal/middleware/password"
-	"github.com/LavaJover/dronwallet/auth/internal/models"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/password"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/models"
 	"gorm.io/gorm"
 )
 

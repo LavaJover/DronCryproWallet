@@ -1,4 +1,4 @@
-module github.com/LavaJover/dronwallet/auth
+module github.com/LavaJover/DronCryptoWallet/auth
 
 go 1.23.2
 

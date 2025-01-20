@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	service "github.com/LavaJover/dronwallet/auth/internal/serviice"
-	authpb "github.com/LavaJover/dronwallet/auth/proto/gen"
+	service "github.com/LavaJover/DronCryptoWallet/auth/internal/serviice"
+	authpb "github.com/LavaJover/DronCryptoWallet/auth/proto/gen"
 )
 
 type AuthServer struct{

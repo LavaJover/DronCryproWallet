@@ -1,4 +1,4 @@
-module github.com/LavaJover/dronwallet/wallet
+module github.com/LavaJover/DronCryptoWallet/wallet
 
 go 1.23.2
 

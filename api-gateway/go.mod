@@ -1,4 +1,4 @@
-module github.com/LavaJover/dronwallet/api-gateway
+module github.com/LavaJover/DronCryptoWallet/api-gateway
 
 go 1.23.2
 

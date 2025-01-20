@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/LavaJover/dronwallet/auth/internal/models"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )

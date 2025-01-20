@@ -3,7 +3,7 @@ package passwordTest
 import (
 	"testing"
 
-	"github.com/LavaJover/dronwallet/auth/internal/middleware/password"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/password"
 )
 
 func TestCheckPassword(t *testing.T){
