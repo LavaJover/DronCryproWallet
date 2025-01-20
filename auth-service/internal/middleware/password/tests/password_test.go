@@ -20,5 +20,4 @@ func TestCheckPassword(t *testing.T){
 		}
 	}
 
-
 }

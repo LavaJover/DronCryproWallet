@@ -2,6 +2,11 @@ package service
 
 import (
 	// token "github.com/LavaJover/dronwallet/auth/internal/middleware/JWT"
+	"errors"
+
+	token "github.com/LavaJover/dronwallet/auth/internal/middleware/JWT"
+	"github.com/LavaJover/dronwallet/auth/internal/middleware/password"
+	// "github.com/LavaJover/dronwallet/auth/internal/middleware/password"
 	"github.com/LavaJover/dronwallet/auth/internal/models"
 	repo "github.com/LavaJover/dronwallet/auth/internal/repositories"
 )
@@ -24,12 +29,17 @@ func (authService *AuthService) Register (email string, raw_password string) (ui
 	return newUser.ID, nil
 }
 
-func (authService *AuthService) Login (email string, raw_password string) (string, error){
+func (authService *AuthService) Login (email string, rawRassword string) (string, error){
 
-	// token.GenerateJWT()
+	user := authService.UserRepo.FindUserByEmail(email)
 
-	authService.UserRepo.FindUserByCredentials(email, raw_password)
+	if user.Email == ""{
+		return "", errors.New("user " + email + " not found!")
+	}
 
-	return "asdasd", nil
+	if !password.CheckPassword(rawRassword, user.Password){
+		return "", errors.New("wrong password for user " + email)
+	}
 
+	return token.GenerateJWT(int(user.ID))
 }

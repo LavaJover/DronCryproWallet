@@ -1,8 +1,6 @@
 package repo
 
 import (
-	"log/slog"
-
 	"github.com/LavaJover/dronwallet/auth/internal/middleware/password"
 	"github.com/LavaJover/dronwallet/auth/internal/models"
 	"gorm.io/gorm"
@@ -23,9 +21,17 @@ func (repo *UserRepo) DeleteUser (id uint){
 	repo.DB.Delete(&models.User{}, id)
 }
 
-func (repo *UserRepo) FindUserByCredentials (email string, raw_password string){
+func (repo *UserRepo) FindUserByCredentials (email string, raw_password string) *models.User{
 	user := &models.User{}
 	repo.DB.Where("email = ? AND password = ?", email, password.HashPassword(raw_password)).First(&user)
 
-	slog.Info("User found: ", "User: ", user)
+	return user
+}
+
+func (repo *UserRepo) FindUserByEmail (email string) *models.User{
+	user := &models.User{}
+
+	repo.Where("email = ?", email).First(user)
+
+	return user
 }
