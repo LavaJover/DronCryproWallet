@@ -24,7 +24,7 @@ func main(){
 	defer authServiceConn.Close()
 	authServiceClient := authpb.NewAuthClient(authServiceConn)
 
-	
+	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func (w http.ResponseWriter, r *http.Request){
 		if r.Method != http.MethodPost{
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
@@ -58,6 +58,31 @@ func main(){
 		json.NewEncoder(w).Encode(response)
 	
 	})
+
+	// Ручка логина пользователя
+	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodPost{
+			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		}
+
+		var user models.User
+	
+		err := json.NewDecoder(r.Body).Decode(&user)
+	
+		if err != nil{
+			http.Error(w, "Ошибка при парсинге JSON: " + err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		response, err := authServiceClient.Login(context.Background(), &authpb.LoginRequest{
+			Email: user.Email,
+			Password: user.Password,
+		})
+
+		json.NewEncoder(w).Encode(response)
+
+	})
+
 
 	// Запуск сервера
 	log.Println("API Gateway запущен на порту :8080")

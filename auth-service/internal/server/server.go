@@ -17,7 +17,7 @@ func (authServer *AuthServer) Register (ctx context.Context, req *authpb.Registe
 	id, err := authServer.AuthService.Register(req.Email, req.Password)
 
 	if err != nil{
-		log.Fatalf("Register request failed!")
+		return nil, err
 	}
 
 	return &authpb.RegisterResponse{
