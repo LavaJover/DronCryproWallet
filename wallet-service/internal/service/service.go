@@ -1,8 +1,8 @@
 package service
 
 import (
-	"github.com/LavaJover/DronCryptoWallet/wallet/internal/config"
-	"github.com/LavaJover/DronCryptoWallet/wallet/internal/wallet"
+	"github.com/LavaJover/DronCryptoWallet/wallet-service/internal/config"
+	"github.com/LavaJover/DronCryptoWallet/wallet-service/internal/wallet"
 )
 
 type WalletService struct{

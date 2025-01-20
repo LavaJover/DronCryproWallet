@@ -3,8 +3,8 @@ package server
 import (
 	"context"
 
-	"github.com/LavaJover/DronCryptoWallet/wallet/internal/service"
-	walletpb "github.com/LavaJover/DronCryptoWallet/wallet/proto/gen"
+	"github.com/LavaJover/DronCryptoWallet/wallet-service/internal/service"
+	walletpb "github.com/LavaJover/DronCryptoWallet/wallet-service/proto/gen"
 )
 
 type WalletServer struct{
