@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"log"
 
 	service "github.com/LavaJover/DronCryptoWallet/auth/internal/serviice"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth/proto/gen"
@@ -29,7 +28,7 @@ func (authServer *AuthServer) Login (ctx context.Context, req *authpb.LoginReque
 	token, err := authServer.AuthService.Login(req.Email, req.Password)
 
 	if err != nil{
-		log.Fatalf("Failed to log user in: %v", err)
+		return nil, err
 	}
 
 	return &authpb.LoginResponse{
