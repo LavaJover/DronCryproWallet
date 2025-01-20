@@ -1,0 +1,24 @@
+package service
+
+import (
+	"github.com/LavaJover/dronwallet/auth/internal/models"
+	repo "github.com/LavaJover/dronwallet/auth/internal/repositories"
+)
+
+
+type AuthService struct{
+	*repo.UserRepo
+}
+
+
+func (authService *AuthService) Register (email string, raw_password string) (uint, error){
+
+	newUser := models.User{
+		Email: email,
+		Password: raw_password,
+	}
+
+	authService.UserRepo.AddUser(&newUser)
+
+	return newUser.ID, nil
+}

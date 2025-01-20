@@ -1,21 +1,19 @@
 package db
 
 import (
+	"github.com/LavaJover/dronwallet/auth/internal/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
-	"log"
 )
 
-// type User struct{
-// 	gorm.Model
-// 	Email string 	`gorm:"unique"`
-// 	Password string `gorm:"not null"`
-// }
+func InitDB(dsn string) (*gorm.DB, error){
+	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 
-func InitDB(dsn string){
-	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db.AutoMigrate(&models.User{})
+
 	if err != nil{
-		log.Fatalf("Failed to connect to database: %v", err)
+		return nil, err
 	}
-	log.Println("Database connected!")
+
+	return db, nil
 }
