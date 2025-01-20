@@ -4,12 +4,12 @@ go 1.23.2
 
 require (
 	github.com/LavaJover/DronCryptoWallet/auth-service v0.0.0
+	github.com/ilyakaznacheev/cleanenv v1.5.0
 	google.golang.org/grpc v1.69.4
 )
 
 require (
 	github.com/BurntSushi/toml v1.2.1 // indirect
-	github.com/ilyakaznacheev/cleanenv v1.5.0 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	golang.org/x/net v0.34.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect

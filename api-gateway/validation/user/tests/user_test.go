@@ -9,15 +9,15 @@ import (
 
 func TestValidateUserRequest(t *testing.T){
 	users := []*models.User{
-		&models.User{
+		{
 			Email: "test@gmail.com",
 			Password: "asd87JJyaks",
 		},
-		&models.User{
+		{
 			Email: "testgmail.com",
 			Password: "IIyyabhsus",
 		},
-		&models.User{
+		{
 			Email: "test@gmail.com",
 			Password: "123",
 		},
