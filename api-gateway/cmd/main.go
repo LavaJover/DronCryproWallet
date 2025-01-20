@@ -11,7 +11,6 @@ import (
 
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/models"
-	uservalid "github.com/LavaJover/DronCryptoWallet/api-gateway/validation/user"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth-service/proto/gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
@@ -64,7 +63,11 @@ func main(){
 
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func (w http.ResponseWriter, r *http.Request){
+
+		myLog.Info("register handler", "URL", "/api/auth/reg")
+
 		if r.Method != http.MethodPost{
+			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 			return
 		}
@@ -76,10 +79,6 @@ func main(){
 		if err != nil{
 			http.Error(w, "Ошибка при парсинге JSON: " + err.Error(), http.StatusBadRequest)
 			return
-		}
-	
-		if err := uservalid.ValidateUserRequest(&user); err != nil{
-			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
 
 		response, err := authServiceClient.Register(context.Background(), &authpb.RegisterRequest{
@@ -99,7 +98,11 @@ func main(){
 
 	// Ручка логина пользователя
 	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
+
+		myLog.Info("login handler", "URL", "/api/auth/login")
+
 		if r.Method != http.MethodPost{
+			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
 
@@ -117,13 +120,17 @@ func main(){
 			Password: user.Password,
 		})
 
+		if err != nil{
+			http.Error(w, "login failed" + err.Error(), http.StatusBadRequest)
+		}
+
 		json.NewEncoder(w).Encode(response)
 
 	})
 
 
 	// Запуск сервера
-	log.Println("API Gateway запущен на порту :8080")
+	myLog.Info("api gateway serving", "address", cfg.Address)
 	if err := http.ListenAndServe(":8080", nil); err != nil {
 		log.Fatalf("Ошибка запуска сервера: %v", err)
 	}
