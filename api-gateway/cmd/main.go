@@ -5,6 +5,8 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	authpb "github.com/LavaJover/DronCryptoWallet/auth-service/proto/gen"
+
 )
 
 func main(){
@@ -15,4 +17,7 @@ func main(){
 	}
 
 	defer authServiceConn.Close()
+
+	authpb.NewAuthClient(authServiceConn)
+
 }
