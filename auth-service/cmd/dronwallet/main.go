@@ -5,6 +5,7 @@ import (
 	"log/slog"
 	"net"
 
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/db"
 	repo "github.com/LavaJover/DronCryptoWallet/auth/internal/repositories"
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/server"
@@ -14,9 +15,12 @@ import (
 )
 
 func main(){
+
+	cfg := config.MustLoad()
+
 	grpcServer := grpc.NewServer()
 
-	dsn := "host=localhost user=postgres password=admin dbname=dronwallet port=5432 sslmode=disable"
+	dsn := cfg.Dsn
 	db, err := db.InitDB(dsn)
 
 	if err != nil{
@@ -31,13 +35,13 @@ func main(){
 
 	authpb.RegisterAuthServer(grpcServer, &authServer)
 
-	listener, err := net.Listen("tcp", ":50052")
+	listener, err := net.Listen("tcp", ":"+cfg.Port)
 
 	if err != nil{
-		log.Fatalf("Failed to listen on port 50052: %v", err)
+		log.Fatalf("Failed to listen on port %s: %v", cfg.Port, err)
 	}
 
-	log.Println("gRPC server is running on port 50052")
+	slog.Info("server running on port " + cfg.Port)
     if err := grpcServer.Serve(listener); err != nil {
         log.Fatalf("Failed to serve gRPC server: %v", err)
     }
