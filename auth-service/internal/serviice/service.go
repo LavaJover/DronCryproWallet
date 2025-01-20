@@ -9,11 +9,9 @@ import (
 	repo "github.com/LavaJover/DronCryptoWallet/auth/internal/repositories"
 )
 
-
 type AuthService struct{
 	*repo.UserRepo
 }
-
 
 func (authService *AuthService) Register (email string, raw_password string) (uint, error){
 
