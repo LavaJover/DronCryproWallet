@@ -12,6 +12,7 @@ import (
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/models"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth-service/proto/gen"
+	walletpb "github.com/LavaJover/DronCryptoWallet/wallet-service/proto/gen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -45,13 +46,12 @@ func setupLogger(env string) *slog.Logger{
 func main(){
 
 	cfg := config.MustLoad()
-
 	fmt.Println(cfg)
 
 	myLog := setupLogger(cfg.Env)
-
 	myLog.Info("starting api-gateway")
 
+	// Auth service init
 	authServiceConn, err := grpc.Dial("localhost:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
 
 	if err != nil{
@@ -60,6 +60,16 @@ func main(){
 
 	defer authServiceConn.Close()
 	authServiceClient := authpb.NewAuthClient(authServiceConn)
+
+	// Wallet service init
+	walletServiceConn, err := grpc.Dial("localhost:50051", grpc.WithTransportCredentials(insecure.NewCredentials()))
+
+	if err != nil{
+		log.Fatalf("Failed to connect to wallet-service: %v", err)
+	}
+
+	defer walletServiceConn.Close()
+	walletServiceClient := walletpb.NewWalletServiceClient(walletServiceConn)
 
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func (w http.ResponseWriter, r *http.Request){
@@ -128,6 +138,18 @@ func main(){
 
 	})
 
+	http.HandleFunc("/api/wallet/balance", func(w http.ResponseWriter, r *http.Request) {
+		response, err := walletServiceClient.GetWalletBalance(context.Background(), &walletpb.GetBalanceRequest{
+			Address: "TQUurKqa9dpZcoCV7QwdQMJxueycFipFbh",
+		})
+
+		if err != nil{
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		json.NewEncoder(w).Encode(response)
+	})
 
 	// Запуск сервера
 	myLog.Info("api gateway serving", "address", cfg.Address)

@@ -20,6 +20,7 @@ func (authService *AuthService) Register (email string, raw_password string) (ui
 		Password: raw_password,
 	}
 
+
 	authService.UserRepo.AddUser(&newUser)
 
 	return newUser.ID, nil

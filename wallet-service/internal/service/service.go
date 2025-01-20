@@ -1,12 +1,13 @@
 package service
 
 import (
+	"log/slog"
+
 	"github.com/LavaJover/DronCryptoWallet/wallet-service/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/wallet-service/internal/wallet"
 )
 
 type WalletService struct{
-
 }
 
 func (walletService *WalletService) GetWalletBalance (address string) (float64, error){
@@ -15,5 +16,10 @@ func (walletService *WalletService) GetWalletBalance (address string) (float64, 
 
 	balance, err := wallet.GetUSDTBalance(address, apiKey)
 
-	return balance, err
+	if err != nil{
+		slog.Error("failed to fetch balance: " + err.Error())
+		return 0, err
+	}
+
+	return balance, nil
 }
