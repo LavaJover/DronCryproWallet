@@ -22,3 +22,11 @@ func (authService *AuthService) Register (email string, raw_password string) (ui
 
 	return newUser.ID, nil
 }
+
+func (authService *AuthService) Login (email string, raw_password string) (string, error){
+
+	authService.UserRepo.FindUserByCredentials(email, raw_password)
+
+	return "asdasd", nil
+
+}

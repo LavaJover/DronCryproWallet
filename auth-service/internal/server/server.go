@@ -24,3 +24,15 @@ func (authServer *AuthServer) Register (ctx context.Context, req *authpb.Registe
 		UserId: int64(id),
 	}, nil
 }
+
+func (authServer *AuthServer) Login (ctx context.Context, req *authpb.LoginRequest) (*authpb.LoginResponse, error){
+	token, err := authServer.AuthService.Login(req.Email, req.Password)
+
+	if err != nil{
+		log.Fatalf("Failed to log user in: %v", err)
+	}
+
+	return &authpb.LoginResponse{
+		Token: token,
+	}, nil
+}
