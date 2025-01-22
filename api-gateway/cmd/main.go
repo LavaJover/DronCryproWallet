@@ -123,6 +123,14 @@ func main(){
 
 		myLog.Info("login handler", "URL", "/api/auth/login")
 
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
 		if r.Method != http.MethodPost{
 			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
@@ -146,6 +154,9 @@ func main(){
 			http.Error(w, "login failed" + err.Error(), http.StatusBadRequest)
 		}
 
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
 
 	})
