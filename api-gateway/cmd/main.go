@@ -72,39 +72,51 @@ func main(){
 	walletServiceClient := walletpb.NewWalletServiceClient(walletServiceConn)
 
 	// Ручка регистрации нового пользователя
-	http.HandleFunc("/api/auth/reg", func (w http.ResponseWriter, r *http.Request){
-
+	http.HandleFunc("/api/auth/reg", func(w http.ResponseWriter, r *http.Request) {
+		// Log the incoming request
 		myLog.Info("register handler", "URL", "/api/auth/reg")
-
-		if r.Method != http.MethodPost{
+	
+		// Handle OPTIONS requests
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+	
+		// Ensure the request is POST
+		if r.Method != http.MethodPost {
 			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 			return
 		}
 	
+		// Parse and decode the JSON payload
 		var user models.User
-	
 		err := json.NewDecoder(r.Body).Decode(&user)
-	
-		if err != nil{
-			http.Error(w, "Ошибка при парсинге JSON: " + err.Error(), http.StatusBadRequest)
+		if err != nil {
+			http.Error(w, "Ошибка при парсинге JSON: "+err.Error(), http.StatusBadRequest)
 			return
 		}
-
+	
+		// Send registration request to AuthService
 		response, err := authServiceClient.Register(context.Background(), &authpb.RegisterRequest{
-			Email: user.Email,
+			Email:    user.Email,
 			Password: user.Password,
 		})
-
-		if err != nil{
-			http.Error(w, "Ошибка при соединении с AuthService", http.StatusBadRequest)
+		if err != nil {
+			http.Error(w, "Ошибка при соединении с AuthService: "+err.Error(), http.StatusBadRequest)
+			return
 		}
-
-		w.WriteHeader(http.StatusCreated)
-
-		json.NewEncoder(w).Encode(response)
 	
+		// Respond with success
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		json.NewEncoder(w).Encode(response)
 	})
+	
 
 	// Ручка логина пользователя
 	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
