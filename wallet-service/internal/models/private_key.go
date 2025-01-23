@@ -4,6 +4,6 @@ import "gorm.io/gorm"
 
 type PrivateKey struct{
 	gorm.Model
-	Key string 	`gorm:"not null;unique"`
+	Key string `gorm:"not null;unique"`
 	UserID uint
 }
