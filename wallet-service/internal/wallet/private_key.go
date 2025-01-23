@@ -1,6 +1,8 @@
 package wallet
 
 import (
+	"fmt"
+
 	"github.com/decred/dcrd/dcrec/secp256k1/v4"
 )
 
@@ -13,5 +15,7 @@ func GeneratePrivateKey() (string, error){
 	// Приватный ключ в виде байтов
 	privateKeyBytes := privateKey.Serialize()
 
-	return string(privateKeyBytes), nil
+	privateKeyHex := fmt.Sprintf("%x", privateKeyBytes)
+
+	return privateKeyHex, nil
 }
