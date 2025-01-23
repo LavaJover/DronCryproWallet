@@ -23,3 +23,19 @@ func (walletServer *WalletServer) GetPrivateKey (ctx context.Context, req *walle
 		PrivateKey: privateKey,
 	}, nil
 }
+
+func (walletServer *WalletServer) RegisterPrivateKey (ctx context.Context, req *walletpb.RegisterPrivateKeyRequest) (*walletpb.RegisterPrivateKeyResponse, error){
+
+	pk := req.PrivateKey
+	jwtToken := req.Token
+
+	err := walletServer.WalletService.RegisterPrivateKey(jwtToken, pk)
+
+	if err != nil{
+		return nil, err
+	}
+
+	return &walletpb.RegisterPrivateKeyResponse{
+		Status: "OK",
+	}, nil
+}
