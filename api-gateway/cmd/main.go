@@ -115,7 +115,7 @@ func main(){
 		}
 	
 		// Respond with success
-		myLog.Info("success signup request", "status", http.StatusCreated)
+		myLog.Info(r.URL.Path, "status", http.StatusOK)
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
@@ -160,7 +160,7 @@ func main(){
 			http.Error(w, "login failed" + err.Error(), http.StatusBadRequest)
 		}
 
-		myLog.Info("success login request", "status", http.StatusOK)
+		myLog.Info(r.URL.Path, "status", http.StatusOK)
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
@@ -169,6 +169,7 @@ func main(){
 
 	})
 
+	// Ручка получения приватного ключа
 	http.HandleFunc("/api/wallet/privatekey", func(w http.ResponseWriter, r *http.Request) {
 
 		myLog.Info("/api/wallet/privatekey", "method", r.Method)
@@ -186,7 +187,7 @@ func main(){
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
 
-		response, err := walletServiceClient.GetPrivateKey(context.Background(), &walletpb.GetPrivateKeyRequest{Token: ""})
+		response, err := walletServiceClient.GetPrivateKey(context.Background(), &walletpb.GetPrivateKeyRequest{Token: "some_token"})
 
 		if err != nil{
 			myLog.Error("failed to generate private key", "error", err)
