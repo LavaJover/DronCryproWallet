@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 
-	service "github.com/LavaJover/DronCryptoWallet/auth/internal/serviice"
+	service "github.com/LavaJover/DronCryptoWallet/auth/internal/service"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth/proto/gen"
 )
 
@@ -13,15 +13,13 @@ type AuthServer struct{
 }
 
 func (authServer *AuthServer) Register (ctx context.Context, req *authpb.RegisterRequest) (*authpb.RegisterResponse, error){
-	id, err := authServer.AuthService.Register(req.Email, req.Password)
+	err := authServer.AuthService.Register(req.Email, req.Password)
 
 	if err != nil{
 		return nil, err
 	}
 
-	return &authpb.RegisterResponse{
-		UserId: int64(id),
-	}, nil
+	return &authpb.RegisterResponse{}, nil
 }
 
 func (authServer *AuthServer) Login (ctx context.Context, req *authpb.LoginRequest) (*authpb.LoginResponse, error){

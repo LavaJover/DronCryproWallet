@@ -9,7 +9,7 @@ import (
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/db"
 	repo "github.com/LavaJover/DronCryptoWallet/auth/internal/repositories"
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/server"
-	service "github.com/LavaJover/DronCryptoWallet/auth/internal/serviice"
+	service "github.com/LavaJover/DronCryptoWallet/auth/internal/service"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth/proto/gen"
 	"google.golang.org/grpc"
 )

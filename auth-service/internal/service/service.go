@@ -13,7 +13,7 @@ type AuthService struct{
 	*repo.UserRepo
 }
 
-func (authService *AuthService) Register (email string, raw_password string) (uint, error){
+func (authService *AuthService) Register (email string, raw_password string) error{
 
 	newUser := models.User{
 		Email: email,
@@ -23,7 +23,7 @@ func (authService *AuthService) Register (email string, raw_password string) (ui
 
 	authService.UserRepo.AddUser(&newUser)
 
-	return newUser.ID, nil
+	return nil
 }
 
 func (authService *AuthService) Login (email string, rawRassword string) (string, error){
