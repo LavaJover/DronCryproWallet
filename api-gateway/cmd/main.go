@@ -61,7 +61,6 @@ func main(){
 	defer authServiceConn.Close()
 	authServiceClient := authpb.NewAuthClient(authServiceConn)
 
-
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func(w http.ResponseWriter, r *http.Request) {
 		// Log the incoming request
@@ -106,7 +105,7 @@ func main(){
 		}
 	
 		// Respond with success
-		myLog.Info(r.URL.Path, "status", http.StatusOK)
+		myLog.Info(r.URL.Path, "status", http.StatusCreated)
 
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
@@ -159,17 +158,6 @@ func main(){
 		json.NewEncoder(w).Encode(response)
 
 	})
-
-	// Ручка создания нового кошелька пользователя
-
-	// Ручка проверки баланса кошелька пользователя
-
-	// Ручка получения списка транзакций кошелька пользоватея
-
-	// Ручка создания транзакции TRX кошелька пользователя
-
-	// Ручка получения списка кошельков пользователя
-
 
 	// Запуск сервера
 	myLog.Info("api gateway serving", "address", cfg.Address)
