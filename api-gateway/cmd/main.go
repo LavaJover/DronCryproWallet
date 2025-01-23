@@ -112,7 +112,6 @@ func main(){
 		w.WriteHeader(http.StatusCreated)
 		json.NewEncoder(w).Encode(response)
 	})
-	
 
 	// Ручка логина пользователя
 	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
@@ -156,6 +155,44 @@ func main(){
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
 		json.NewEncoder(w).Encode(response)
+
+	})
+
+	// Ручка валидации токена
+
+	http.HandleFunc("/api/auth/valid", func(w http.ResponseWriter, r *http.Request) {
+
+		myLog.Info("/api/auth/valid", "method", r.Method)
+
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "POST, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		if r.Method != http.MethodPost{
+			myLog.Error("method is not supported", "method", r.Method)
+			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		}
+
+		token := r.Header.Get("Authorization")
+
+		validateResponse, err := authServiceClient.ValidateJWT(context.Background(), &authpb.ValidateJWTRequest{Token: token})
+
+		if err != nil{
+			myLog.Error("failed to validate JWT", "err", err.Error())
+			http.Error(w, "failed to validate JWT", http.StatusBadRequest)
+			return
+		}
+
+		myLog.Info(r.URL.Path, "status", http.StatusOK)
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(validateResponse)
 
 	})
 

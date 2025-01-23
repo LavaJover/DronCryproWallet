@@ -33,3 +33,13 @@ func (authServer *AuthServer) Login (ctx context.Context, req *authpb.LoginReque
 		Token: token,
 	}, nil
 }
+
+func (authServer *AuthServer) ValidateJWT (ctx context.Context, req *authpb.ValidateJWTRequest) (*authpb.ValidateJWTResponse, error){
+	err := authServer.AuthService.ValidateJWT(req.Token)
+
+	if err != nil{
+		return &authpb.ValidateJWTResponse{Valid: false}, err
+	}
+
+	return &authpb.ValidateJWTResponse{Valid: true}, nil
+}

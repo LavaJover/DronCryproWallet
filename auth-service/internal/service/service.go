@@ -3,7 +3,7 @@ package service
 import (
 	"errors"
 
-	token "github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/JWT"
+	"github.com/LavaJover/DronCryptoWallet/auth/internal/middleware"
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/middleware/password"
 	"github.com/LavaJover/DronCryptoWallet/auth/internal/models"
 	repo "github.com/LavaJover/DronCryptoWallet/auth/internal/repositories"
@@ -38,5 +38,11 @@ func (authService *AuthService) Login (email string, rawRassword string) (string
 		return "", errors.New("wrong password for user " + email)
 	}
 
-	return token.GenerateJWT(int(user.ID))
+	return middleware.GenerateJWT(int(user.ID))
+}
+
+func (authService *AuthService) ValidateJWT (token string) error{
+	_, err := middleware.ValidateJWT(token)
+
+	return err
 }
