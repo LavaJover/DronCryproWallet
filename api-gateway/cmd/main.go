@@ -8,6 +8,7 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	// "strings"
 
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/models"
@@ -64,7 +65,7 @@ func main(){
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func(w http.ResponseWriter, r *http.Request) {
 		// Log the incoming request
-		myLog.Info("/api/auth/reg", "method", r.Method)
+		myLog.Info(r.URL.Path, "method", r.Method)
 	
 		// Handle OPTIONS requests
 		if r.Method == http.MethodOptions {
@@ -116,7 +117,7 @@ func main(){
 	// Ручка логина пользователя
 	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
 
-		myLog.Info("/api/auth/login", "method", r.Method)
+		myLog.Info(r.URL.Path, "method", r.Method)
 
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -159,10 +160,9 @@ func main(){
 	})
 
 	// Ручка валидации токена
-
 	http.HandleFunc("/api/auth/valid", func(w http.ResponseWriter, r *http.Request) {
 
-		myLog.Info("/api/auth/valid", "method", r.Method)
+		myLog.Info(r.URL.Path, "method", r.Method)
 
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -177,13 +177,29 @@ func main(){
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
 
-		token := r.Header.Get("Authorization")
+		authHeader := r.Header.Get("Authorization")
+		if authHeader == "" {
+			http.Error(w, "Отсутствует заголовок Authorization", http.StatusUnauthorized)
+			return
+		}
+	
+		// Проверяем, что токен имеет префикс "Bearer "
+		const bearerPrefix = "Bearer "
+		if len(authHeader) <= len(bearerPrefix) || authHeader[:len(bearerPrefix)] != bearerPrefix {
+			http.Error(w, "Некорректный формат токена", http.StatusUnauthorized)
+			return
+		}
+	
+		// Извлекаем сам токен
+		token := authHeader[len(bearerPrefix):]
+
+		myLog.Info("JWT", "token", token)
 
 		validateResponse, err := authServiceClient.ValidateJWT(context.Background(), &authpb.ValidateJWTRequest{Token: token})
 
 		if err != nil{
-			myLog.Error("failed to validate JWT", "err", err.Error())
-			http.Error(w, "failed to validate JWT", http.StatusBadRequest)
+			myLog.Error("invalid JWT token", "err", err.Error())
+			http.Error(w, "invalid JWT token", http.StatusBadRequest)
 			return
 		}
 
