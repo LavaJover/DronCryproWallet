@@ -23,5 +23,5 @@ message RegisterPrivateKeyRequest{
 }
 
 message RegisterPrivateKeyResponse{
-    
+    string status = 1;
 }
