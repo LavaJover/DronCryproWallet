@@ -7,6 +7,7 @@ option go_package = "github.com/LavaJover/dronwallet/wallet/proto/gen;walletpb";
 service WalletService{
    rpc GetPrivateKey (GetPrivateKeyRequest) returns (GetPrivateKeyResponse);
    rpc RegisterPrivateKey (RegisterPrivateKeyRequest) returns (RegisterPrivateKeyResponse);
+   rpc GetUserPrivateKeys (GetUserPrivateKeysRequest) returns (GetUserPrivateKeysResponse);
 }
 
 message GetPrivateKeyRequest{
@@ -24,4 +25,12 @@ message RegisterPrivateKeyRequest{
 
 message RegisterPrivateKeyResponse{
     string status = 1;
+}
+
+message GetUserPrivateKeysRequest{
+    string token = 1;
+}
+
+message GetUserPrivateKeysResponse{
+    repeated string privateKeys = 1;
 }

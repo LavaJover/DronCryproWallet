@@ -24,3 +24,20 @@ func (walletService *WalletService) RegisterPrivateKey(token string, key string)
 
 	return walletService.PrivateKeyRepo.RegisterPK(key, userID)
 }
+
+func (walletService *WalletService) GetUserPrivateKeys(token string) (*[]string, error){
+	userID, err := jwttoken.DecodeJWT(token)
+
+	if err != nil{
+		return nil, err
+	}
+
+	keys, err := walletService.PrivateKeyRepo.GetUserPrivateKeys(userID)
+
+	if err != nil{
+		return nil, err
+	}
+
+	return keys, nil
+
+}
