@@ -4,7 +4,7 @@ go 1.23.2
 
 require (
 	github.com/LavaJover/DronCryptoWallet/auth-service v0.0.0
-	github.com/LavaJover/DronCryptoWallet/wallet-service v0.0.0
+	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/ilyakaznacheev/cleanenv v1.5.0
 	google.golang.org/grpc v1.69.4
 )
@@ -22,5 +22,3 @@ require (
 )
 
 replace github.com/LavaJover/DronCryptoWallet/auth-service => ../auth-service
-
-replace github.com/LavaJover/DronCryptoWallet/wallet-service => ../wallet-service
