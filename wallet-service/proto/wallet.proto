@@ -5,13 +5,13 @@ package wallet;
 option go_package = "github.com/LavaJover/dronwallet/wallet/proto/gen;walletpb";
 
 service WalletService{
-    rpc GetWalletBalance (GetBalanceRequest) returns (GetBalanceResponse);
+   rpc GetPrivateKey (GetPrivateKeyRequest) returns (GetPrivateKeyResponse);
 }
 
-message GetBalanceRequest{
-    string address = 1;
+message GetPrivateKeyRequest{
+    string token = 1;
 }
 
-message GetBalanceResponse{
-    double balance = 1;
+message GetPrivateKeyResponse{
+    string privateKey = 1;
 }

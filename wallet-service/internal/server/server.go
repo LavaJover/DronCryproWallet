@@ -12,12 +12,14 @@ type WalletServer struct{
 	WalletService *service.WalletService
 }
 
-func (walletServer *WalletServer) GetWalletBalance (ctx context.Context, req *walletpb.GetBalanceRequest) (*walletpb.GetBalanceResponse, error){
-	balance, err := walletServer.WalletService.GetWalletBalance(req.Address)
+func (walletServer *WalletServer) GetPrivateKey (ctx context.Context, req *walletpb.GetPrivateKeyRequest) (*walletpb.GetPrivateKeyResponse, error){
+	privateKey, err :=  walletServer.WalletService.GetPrivateKey()
 
 	if err != nil{
 		return nil, err
 	}
 
-	return &walletpb.GetBalanceResponse{Balance: balance}, nil
+	return &walletpb.GetPrivateKeyResponse{
+		PrivateKey: privateKey,
+	}, nil
 }

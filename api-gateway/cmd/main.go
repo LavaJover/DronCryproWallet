@@ -96,6 +96,8 @@ func main(){
 		var user models.User
 		err := json.NewDecoder(r.Body).Decode(&user)
 		if err != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
 			http.Error(w, "Ошибка при парсинге JSON: "+err.Error(), http.StatusBadRequest)
 			return
 		}
@@ -106,11 +108,15 @@ func main(){
 			Password: user.Password,
 		})
 		if err != nil {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Content-Type", "application/json")
 			http.Error(w, "Ошибка при соединении с AuthService: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 	
 		// Respond with success
+		myLog.Info("success signup request", "status", http.StatusCreated)
+
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
@@ -154,6 +160,8 @@ func main(){
 			http.Error(w, "login failed" + err.Error(), http.StatusBadRequest)
 		}
 
+		myLog.Info("success login request", "status", http.StatusOK)
+
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusOK)
@@ -162,16 +170,7 @@ func main(){
 	})
 
 	http.HandleFunc("/api/wallet/balance", func(w http.ResponseWriter, r *http.Request) {
-		response, err := walletServiceClient.GetWalletBalance(context.Background(), &walletpb.GetBalanceRequest{
-			Address: "TQUurKqa9dpZcoCV7QwdQMJxueycFipFbh",
-		})
-
-		if err != nil{
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		json.NewEncoder(w).Encode(response)
+		
 	})
 
 	// Запуск сервера

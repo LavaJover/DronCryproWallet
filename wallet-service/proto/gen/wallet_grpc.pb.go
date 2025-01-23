@@ -19,14 +19,14 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	WalletService_GetWalletBalance_FullMethodName = "/wallet.WalletService/GetWalletBalance"
+	WalletService_GetPrivateKey_FullMethodName = "/wallet.WalletService/GetPrivateKey"
 )
 
 // WalletServiceClient is the client API for WalletService service.
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type WalletServiceClient interface {
-	GetWalletBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*GetBalanceResponse, error)
+	GetPrivateKey(ctx context.Context, in *GetPrivateKeyRequest, opts ...grpc.CallOption) (*GetPrivateKeyResponse, error)
 }
 
 type walletServiceClient struct {
@@ -37,10 +37,10 @@ func NewWalletServiceClient(cc grpc.ClientConnInterface) WalletServiceClient {
 	return &walletServiceClient{cc}
 }
 
-func (c *walletServiceClient) GetWalletBalance(ctx context.Context, in *GetBalanceRequest, opts ...grpc.CallOption) (*GetBalanceResponse, error) {
+func (c *walletServiceClient) GetPrivateKey(ctx context.Context, in *GetPrivateKeyRequest, opts ...grpc.CallOption) (*GetPrivateKeyResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(GetBalanceResponse)
-	err := c.cc.Invoke(ctx, WalletService_GetWalletBalance_FullMethodName, in, out, cOpts...)
+	out := new(GetPrivateKeyResponse)
+	err := c.cc.Invoke(ctx, WalletService_GetPrivateKey_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *walletServiceClient) GetWalletBalance(ctx context.Context, in *GetBalan
 // All implementations must embed UnimplementedWalletServiceServer
 // for forward compatibility.
 type WalletServiceServer interface {
-	GetWalletBalance(context.Context, *GetBalanceRequest) (*GetBalanceResponse, error)
+	GetPrivateKey(context.Context, *GetPrivateKeyRequest) (*GetPrivateKeyResponse, error)
 	mustEmbedUnimplementedWalletServiceServer()
 }
 
@@ -62,8 +62,8 @@ type WalletServiceServer interface {
 // pointer dereference when methods are called.
 type UnimplementedWalletServiceServer struct{}
 
-func (UnimplementedWalletServiceServer) GetWalletBalance(context.Context, *GetBalanceRequest) (*GetBalanceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetWalletBalance not implemented")
+func (UnimplementedWalletServiceServer) GetPrivateKey(context.Context, *GetPrivateKeyRequest) (*GetPrivateKeyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPrivateKey not implemented")
 }
 func (UnimplementedWalletServiceServer) mustEmbedUnimplementedWalletServiceServer() {}
 func (UnimplementedWalletServiceServer) testEmbeddedByValue()                       {}
@@ -86,20 +86,20 @@ func RegisterWalletServiceServer(s grpc.ServiceRegistrar, srv WalletServiceServe
 	s.RegisterService(&WalletService_ServiceDesc, srv)
 }
 
-func _WalletService_GetWalletBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetBalanceRequest)
+func _WalletService_GetPrivateKey_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPrivateKeyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(WalletServiceServer).GetWalletBalance(ctx, in)
+		return srv.(WalletServiceServer).GetPrivateKey(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: WalletService_GetWalletBalance_FullMethodName,
+		FullMethod: WalletService_GetPrivateKey_FullMethodName,
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(WalletServiceServer).GetWalletBalance(ctx, req.(*GetBalanceRequest))
+		return srv.(WalletServiceServer).GetPrivateKey(ctx, req.(*GetPrivateKeyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -112,8 +112,8 @@ var WalletService_ServiceDesc = grpc.ServiceDesc{
 	HandlerType: (*WalletServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetWalletBalance",
-			Handler:    _WalletService_GetWalletBalance_Handler,
+			MethodName: "GetPrivateKey",
+			Handler:    _WalletService_GetPrivateKey_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
