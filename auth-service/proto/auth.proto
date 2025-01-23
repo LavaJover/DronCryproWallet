@@ -7,6 +7,7 @@ option go_package = "github.com/LavaJover/dronwallet/auth-service/proto/gen;auth
 service Auth{
     rpc Register (RegisterRequest) returns (RegisterResponse);
     rpc Login (LoginRequest) returns (LoginResponse);
+    rpc ValidateJWT (ValidateJWTRequest) returns (ValidateJWTResponse);
 }
 
 message RegisterRequest{
@@ -15,7 +16,7 @@ message RegisterRequest{
 }
 
 message RegisterResponse{
-    int64 user_id = 1;
+    
 }
 
 message LoginRequest{
@@ -25,4 +26,12 @@ message LoginRequest{
 
 message LoginResponse{
     string token = 1;
+}
+
+message ValidateJWTRequest{
+    string token = 1;
+}
+
+message ValidateJWTResponse{
+    bool valid = 1;
 }
