@@ -74,7 +74,7 @@ func main(){
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func(w http.ResponseWriter, r *http.Request) {
 		// Log the incoming request
-		myLog.Info("register handler", "URL", "/api/auth/reg")
+		myLog.Info("/api/auth/reg", "method", r.Method)
 	
 		// Handle OPTIONS requests
 		if r.Method == http.MethodOptions {
@@ -127,7 +127,7 @@ func main(){
 	// Ручка логина пользователя
 	http.HandleFunc("/api/auth/login", func(w http.ResponseWriter, r *http.Request) {
 
-		myLog.Info("login handler", "URL", "/api/auth/login")
+		myLog.Info("/api/auth/login", "method", r.Method)
 
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -169,8 +169,36 @@ func main(){
 
 	})
 
-	http.HandleFunc("/api/wallet/balance", func(w http.ResponseWriter, r *http.Request) {
-		
+	http.HandleFunc("/api/wallet/privatekey", func(w http.ResponseWriter, r *http.Request) {
+
+		myLog.Info("/api/wallet/privatekey", "method", r.Method)
+
+		if r.Method == http.MethodOptions {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+			w.WriteHeader(http.StatusOK)
+			return
+		}
+
+		if r.Method != http.MethodGet{
+			myLog.Error("method is not supported", "method", r.Method)
+			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
+		}
+
+		response, err := walletServiceClient.GetPrivateKey(context.Background(), &walletpb.GetPrivateKeyRequest{Token: ""})
+
+		if err != nil{
+			myLog.Error("failed to generate private key", "error", err)
+			http.Error(w, "failed to generate private key", http.StatusNotFound)
+		}
+
+		myLog.Info(r.URL.Path, "status", http.StatusOK)
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusOK)
+		json.NewEncoder(w).Encode(response)
 	})
 
 	// Запуск сервера
