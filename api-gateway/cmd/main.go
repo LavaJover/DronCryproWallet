@@ -232,7 +232,7 @@ func main() {
 
 	// Запуск сервера
 	myLog.Info("api gateway serving", "address", cfg.Address)
-	if err := http.ListenAndServe(":8080", nil); err != nil {
+	if err := http.ListenAndServe(cfg.Address, nil); err != nil {
 		log.Fatalf("Ошибка запуска сервера: %v", err)
 	}
 }
