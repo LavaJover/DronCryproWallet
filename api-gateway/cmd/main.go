@@ -8,11 +8,13 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+
 	// "strings"
 
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/models"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth-service/proto/gen"
+	httpSwagger "github.com/swaggo/http-swagger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
@@ -20,17 +22,22 @@ import (
 // TODO:
 // - Затестить пакет validator
 
-const(
+// @title Simple Go API
+// @version 1.0
+// @description Example of a simple HTTP server with Swagger documentation.
+// @host localhost:8080
+// @BasePath /api/v1
+
+const (
 	envLocal = "local"
-	envDev = "dev"
-	envProd = "prod"
+	envDev   = "dev"
+	envProd  = "prod"
 )
 
-
-func setupLogger(env string) *slog.Logger{
+func setupLogger(env string) *slog.Logger {
 	var log *slog.Logger
 
-	switch env{
+	switch env {
 	case envLocal:
 		log = slog.New(slog.NewTextHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelDebug}))
 
@@ -44,7 +51,7 @@ func setupLogger(env string) *slog.Logger{
 	return log
 }
 
-func main(){
+func main() {
 
 	cfg := config.MustLoad()
 	fmt.Println(cfg)
@@ -55,18 +62,27 @@ func main(){
 	// Auth service init
 	authServiceConn, err := grpc.Dial("localhost:50052", grpc.WithTransportCredentials(insecure.NewCredentials()))
 
-	if err != nil{
+	if err != nil {
 		log.Fatalf("Failed to connect to auth-service: %v", err)
 	}
 
 	defer authServiceConn.Close()
 	authServiceClient := authpb.NewAuthClient(authServiceConn)
 
+	// @Summary Get user by ID
+	// @Description Returns a user by their ID.
+	// @Tags users
+	// @Accept json
+	// @Produce json
+	// @Param id query int true "User ID"
+	// @Success 200 {object} User
+	// @Failure 404 {object} map[string]string
+	// @Router /users [get]
 	// Ручка регистрации нового пользователя
 	http.HandleFunc("/api/auth/reg", func(w http.ResponseWriter, r *http.Request) {
 		// Log the incoming request
 		myLog.Info(r.URL.Path, "method", r.Method)
-	
+
 		// Handle OPTIONS requests
 		if r.Method == http.MethodOptions {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -75,14 +91,14 @@ func main(){
 			w.WriteHeader(http.StatusOK)
 			return
 		}
-	
+
 		// Ensure the request is POST
 		if r.Method != http.MethodPost {
 			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 			return
 		}
-	
+
 		// Parse and decode the JSON payload
 		var user models.User
 		err := json.NewDecoder(r.Body).Decode(&user)
@@ -92,7 +108,7 @@ func main(){
 			http.Error(w, "Ошибка при парсинге JSON: "+err.Error(), http.StatusBadRequest)
 			return
 		}
-	
+
 		// Send registration request to AuthService
 		response, err := authServiceClient.Register(context.Background(), &authpb.RegisterRequest{
 			Email:    user.Email,
@@ -104,7 +120,7 @@ func main(){
 			http.Error(w, "Ошибка при соединении с AuthService: "+err.Error(), http.StatusBadRequest)
 			return
 		}
-	
+
 		// Respond with success
 		myLog.Info(r.URL.Path, "status", http.StatusCreated)
 
@@ -127,27 +143,27 @@ func main(){
 			return
 		}
 
-		if r.Method != http.MethodPost{
+		if r.Method != http.MethodPost {
 			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
 
 		var user models.User
-	
+
 		err := json.NewDecoder(r.Body).Decode(&user)
-	
-		if err != nil{
-			http.Error(w, "Ошибка при парсинге JSON: " + err.Error(), http.StatusBadRequest)
+
+		if err != nil {
+			http.Error(w, "Ошибка при парсинге JSON: "+err.Error(), http.StatusBadRequest)
 			return
 		}
 
 		response, err := authServiceClient.Login(context.Background(), &authpb.LoginRequest{
-			Email: user.Email,
+			Email:    user.Email,
 			Password: user.Password,
 		})
 
-		if err != nil{
-			http.Error(w, "login failed" + err.Error(), http.StatusBadRequest)
+		if err != nil {
+			http.Error(w, "login failed"+err.Error(), http.StatusBadRequest)
 		}
 
 		myLog.Info(r.URL.Path, "status", http.StatusOK)
@@ -172,7 +188,7 @@ func main(){
 			return
 		}
 
-		if r.Method != http.MethodPost{
+		if r.Method != http.MethodPost {
 			myLog.Error("method is not supported", "method", r.Method)
 			http.Error(w, "Метод не поддерживается", http.StatusMethodNotAllowed)
 		}
@@ -182,14 +198,14 @@ func main(){
 			http.Error(w, "Отсутствует заголовок Authorization", http.StatusUnauthorized)
 			return
 		}
-	
+
 		// Проверяем, что токен имеет префикс "Bearer "
 		const bearerPrefix = "Bearer "
 		if len(authHeader) <= len(bearerPrefix) || authHeader[:len(bearerPrefix)] != bearerPrefix {
 			http.Error(w, "Некорректный формат токена", http.StatusUnauthorized)
 			return
 		}
-	
+
 		// Извлекаем сам токен
 		token := authHeader[len(bearerPrefix):]
 
@@ -197,7 +213,7 @@ func main(){
 
 		validateResponse, err := authServiceClient.ValidateJWT(context.Background(), &authpb.ValidateJWTRequest{Token: token})
 
-		if err != nil{
+		if err != nil {
 			myLog.Error("invalid JWT token", "err", err.Error())
 			http.Error(w, "invalid JWT token", http.StatusBadRequest)
 			return
@@ -211,6 +227,8 @@ func main(){
 		json.NewEncoder(w).Encode(validateResponse)
 
 	})
+
+	http.Handle("/swagger/", httpSwagger.WrapHandler)
 
 	// Запуск сервера
 	myLog.Info("api gateway serving", "address", cfg.Address)

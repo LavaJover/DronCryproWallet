@@ -1,0 +1,9 @@
+basePath: /api/v1
+host: localhost:8080
+info:
+  contact: {}
+  description: Example of a simple HTTP server with Swagger documentation.
+  title: Simple Go API
+  version: "1.0"
+paths: {}
+swagger: "2.0"
