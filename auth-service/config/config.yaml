@@ -1,5 +1,5 @@
 env: "local"
-dsn: "host=localhost user=postgres password=admin dbname=dronwallet port=5432 sslmode=disable"
+dsn: "host=172.17.0.3 user=postgres password=admin dbname=dronwallet port=5432 sslmode=disable"
 grpc_server:
   host: "localhost"
   port: "50052"

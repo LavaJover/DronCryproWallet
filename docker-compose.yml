@@ -1,0 +1,32 @@
+# version: '3.5'
+services:
+  dronwallet:
+   image: dronwallet:latest
+   container_name: dronwallet
+   ports:
+    - '8080:8080'
+    - '50052:50052'
+   restart: unless-stopped
+   depends_on:
+    - db
+   networks:
+    - appnet
+    - internet
+
+  db:
+    image: postgres:latest
+    container_name: drondb
+    restart: unless-stopped
+
+    environment:
+     - 'POSTGRES_PASSWORD=admin'
+    networks:
+     - appnet
+
+networks:
+ internet:
+  name: internet
+  driver: bridge
+ appnet:
+  name: appnet
+  driver: bridge
