@@ -13,6 +13,7 @@ import (
 
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/internal/config"
 	"github.com/LavaJover/DronCryptoWallet/api-gateway/models"
+	_ "github.com/LavaJover/DronCryptoWallet/api-gateway/cmd/docs"
 	authpb "github.com/LavaJover/DronCryptoWallet/auth-service/proto/gen"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"google.golang.org/grpc"
