@@ -1,9 +1,79 @@
-basePath: /api/v1
+basePath: /api/v1/auth
+definitions:
+  main.LoginOkResponse:
+    properties:
+      token:
+        type: string
+    type: object
+  main.RegisterOkResponse:
+    type: object
+  main.ValidOkResponse:
+    properties:
+      valid:
+        type: boolean
+    type: object
 host: localhost:8080
 info:
   contact: {}
-  description: Example of a simple HTTP server with Swagger documentation.
-  title: Simple Go API
+  description: SSO-service for DronWallet
+  title: SSO-service API
   version: "1.0"
-paths: {}
+paths:
+  /api/v1/auth/login:
+    post:
+      consumes:
+      - application/json
+      description: Returns a JWT
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.LoginOkResponse'
+        "400":
+          description: Bad Request
+        "405":
+          description: Method Not Allowed
+      summary: Login API
+      tags:
+      - login
+  /api/v1/auth/reg:
+    post:
+      consumes:
+      - application/json
+      description: Returns a signed up user response
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/main.RegisterOkResponse'
+        "400":
+          description: Bad Request
+        "405":
+          description: Method Not Allowed
+      summary: Register API
+      tags:
+      - reg
+  /api/v1/auth/valid:
+    post:
+      consumes:
+      - application/json
+      description: Check if JWT is still valid
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.ValidOkResponse'
+        "400":
+          description: Bad Request
+        "405":
+          description: Method Not Allowed
+      summary: JWT validation API
+      tags:
+      - valid
 swagger: "2.0"
