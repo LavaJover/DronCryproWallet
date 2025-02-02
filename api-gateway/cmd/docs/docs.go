@@ -38,6 +38,9 @@ const docTemplate = `{
                     "400": {
                         "description": "Bad Request"
                     },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
                     "405": {
                         "description": "Method Not Allowed"
                     }
